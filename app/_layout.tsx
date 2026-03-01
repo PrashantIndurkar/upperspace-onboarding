@@ -1,24 +1,35 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import "../global.css";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
+import "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AnimatedSplashScreen } from "./components/AnimatedSplashScreen";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+// Keep native splash visible until we show and complete our in-app animated splash
+SplashScreen.preventAutoHideAsync().catch(() => {
+  /* reloading the app might trigger race conditions, ignore */
+});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [splashComplete, setSplashComplete] = useState(false);
+
+  // Hide native splash as soon as we show our in-app animated splash so the animation is visible
+  useEffect(() => {
+    if (!splashComplete) {
+      SplashScreen.hideAsync();
+    }
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      {!splashComplete ? (
+        <AnimatedSplashScreen onComplete={() => setSplashComplete(true)} />
+      ) : (
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+        </Stack>
+      )}
+    </SafeAreaProvider>
   );
 }
