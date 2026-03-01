@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "upperspace",
+    "name": "UpperSpace ",
     "slug": "upperspace",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "upperspace",
     "userInterfaceStyle": "automatic",
+    "icon": "./assets/icon.png",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,

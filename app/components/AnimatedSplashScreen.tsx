@@ -1,8 +1,11 @@
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
-import { LayoutChangeEvent, Text, View } from "react-native";
+import { Image, LayoutChangeEvent, Text, View } from "react-native";
 
 const MIN_SPLASH_DURATION_MS = 2000;
+
+// App icon — no borders, just the image (path relative to this file)
+const APP_ICON = require("../../assets/icon.png");
 
 type SplashScreenProps = {
   onComplete: () => void;
@@ -11,7 +14,7 @@ type SplashScreenProps = {
 };
 
 /**
- * Simple splash: company/app name only, then main app.
+ * Splash: app icon image (no borders) + "UpperSpace" in large black text.
  * Hides native splash only after this view has painted (seamless handoff).
  * Completes after min duration and when isAppReady is true (e.g. fonts loaded).
  */
@@ -40,14 +43,21 @@ export function AnimatedSplashScreen({
 
   return (
     <View
-      className="flex-1 items-center justify-center bg-black"
+      className="flex-1 items-center justify-center bg-white"
       onLayout={handleLayout}
-      accessibilityLabel="Upper Space"
+      accessibilityLabel="UpperSpace splash"
       accessibilityRole="image"
     >
+      <Image
+        source={APP_ICON}
+        resizeMode="contain"
+        className="h-32 w-32"
+        accessibilityRole="image"
+        accessibilityLabel="UpperSpace logo"
+      />
       <Text
-        className="text-2xl font-semibold text-white"
-        accessibilityElementsHidden
+        className="mt-6 text-5xl font-bold text-black"
+        accessibilityLabel="UpperSpace"
       >
         UpperSpace
       </Text>
