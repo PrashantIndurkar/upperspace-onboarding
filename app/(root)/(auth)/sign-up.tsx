@@ -65,7 +65,7 @@ export default function SignUpScreen() {
     setLoading(true);
     try {
       await signUp(name, email, password);
-      router.replace("/(root)/(tabs)/home");
+      router.replace("/(root)/(auth)/sign-in");
     } catch (err) {
       const message =
         err instanceof Error

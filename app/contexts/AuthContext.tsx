@@ -19,10 +19,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 // In-memory store for Phase 2 login: email -> { user, password }
-const userCredentialsMap = new Map<
-  string,
-  { user: User; password: string }
->();
+const userCredentialsMap = new Map<string, { user: User; password: string }>();
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -35,22 +32,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       const newUser: User = { name: name.trim(), email: normalizedEmail };
       userCredentialsMap.set(normalizedEmail, { user: newUser, password });
-      setUser(newUser);
     },
-    []
+    [],
   );
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      const normalizedEmail = email.trim().toLowerCase();
-      const entry = userCredentialsMap.get(normalizedEmail);
-      if (!entry || entry.password !== password) {
-        return Promise.reject(new Error("Incorrect credentials."));
-      }
-      setUser(entry.user);
-    },
-    []
-  );
+  const login = useCallback(async (email: string, password: string) => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const entry = userCredentialsMap.get(normalizedEmail);
+    if (!entry || entry.password !== password) {
+      return Promise.reject(new Error("Incorrect credentials."));
+    }
+    setUser(entry.user);
+  }, []);
 
   const logout = useCallback(() => {
     setUser(null);
@@ -70,9 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sendPasswordResetCode,
   };
 
-  return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): AuthContextValue {
