@@ -1,11 +1,9 @@
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import { Image, LayoutChangeEvent, Text, View } from "react-native";
+import { appIcon } from "@/app/assetSources";
 
 const MIN_SPLASH_DURATION_MS = 2000;
-
-// App icon — no borders, just the image (path relative to this file)
-const APP_ICON = require("../../assets/icon.png");
 
 type SplashScreenProps = {
   onComplete: () => void;
@@ -48,13 +46,18 @@ export function AnimatedSplashScreen({
       accessibilityLabel="UpperSpace splash"
       accessibilityRole="image"
     >
-      <Image
-        source={APP_ICON}
-        resizeMode="contain"
-        className="h-32 w-32"
-        accessibilityRole="image"
-        accessibilityLabel="UpperSpace logo"
-      />
+      <View
+        className="h-32 w-32 rounded-xl overflow-hidden"
+        style={{ borderRadius: 12 }}
+      >
+        <Image
+          source={appIcon}
+          resizeMode="contain"
+          className="h-32 w-32"
+          accessibilityRole="image"
+          accessibilityLabel="UpperSpace logo"
+        />
+      </View>
       <Text
         className="mt-6 text-5xl font-bold text-black"
         accessibilityLabel="UpperSpace"

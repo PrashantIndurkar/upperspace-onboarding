@@ -4,8 +4,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import * as SystemUI from "expo-system-ui";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const MIN_SPLASH_DURATION_MS = 2000;
 
@@ -35,11 +35,13 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(root)" options={{ title: "" }} />
-      </Stack>
+      <AuthProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(root)" options={{ title: "" }} />
+        </Stack>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }

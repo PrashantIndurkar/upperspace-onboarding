@@ -7,70 +7,64 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { PencilSimpleLine } from "phosphor-react-native";
 import BackHeader from "@/app/components/auth/BackHeader";
 import FormField from "@/app/components/form/FormField";
-import PasswordField from "@/app/components/form/PasswordField";
-import SocialButton from "@/app/components/auth/SocialButton";
 import Button from "@/app/components/common/Button";
 import { AppIcon } from "@/app/components/common/AppIcon";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { validateSignUp } from "@/app/utils/validation";
+import { validateForgotPassword } from "@/app/utils/validation";
 
 const CIRCLE_ICON_SIZE = 80;
 
-export default function SignUpScreen() {
-  const router = useRouter();
-  const { signUp } = useAuth();
+const EMAIL_ERROR_MESSAGES = [
+  "Email is required.",
+  "Please enter a valid email address.",
+];
 
-  const [name, setName] = useState("");
+export default function ForgotPasswordScreen() {
+  const router = useRouter();
+  const { sendPasswordResetCode } = useAuth();
+
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
   const [contextError, setContextError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const setFieldErrors = (errors: string[]) => {
-    const nameMessages = ["Full name is required."];
-    const emailMessages = [
-      "Email is required.",
-      "Please enter a valid email address.",
-    ];
-    const passwordMessages = [
-      "Password is required.",
-      "Password must be at least 6 characters.",
-    ];
-    setNameError(errors.find((e) => nameMessages.includes(e)) ?? "");
-    setEmailError(errors.find((e) => emailMessages.includes(e)) ?? "");
-    setPasswordError(errors.find((e) => passwordMessages.includes(e)) ?? "");
-    const mapped = new Set([
-      ...nameMessages,
-      ...emailMessages,
-      ...passwordMessages,
-    ]);
+    setEmailError(
+      errors.find((e) => EMAIL_ERROR_MESSAGES.includes(e)) ?? ""
+    );
+    const mapped = new Set(EMAIL_ERROR_MESSAGES);
     setContextError(errors.find((e) => !mapped.has(e)) ?? "");
   };
 
-  const handleRegister = async () => {
+  const handleSendCode = async () => {
     setContextError("");
-    const result = validateSignUp(name, email, password);
+    const result = validateForgotPassword(email);
     if (!result.ok) {
       setFieldErrors(result.errors);
       return;
     }
     setLoading(true);
     try {
-      await signUp(name, email, password);
-      router.replace("/(root)/(tabs)/home");
+      await sendPasswordResetCode(email);
+      Alert.alert(
+        "Code sent",
+        "If an account exists, a code has been sent to your email.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(root)/(auth)/sign-in"),
+          },
+        ]
+      );
     } catch (err) {
       const message =
-        err instanceof Error
-          ? err.message
-          : "This email is already registered.";
+        err instanceof Error ? err.message : "Something went wrong.";
       setContextError(message);
     } finally {
       setLoading(false);
@@ -78,6 +72,10 @@ export default function SignUpScreen() {
   };
 
   const handleSignInPress = () => {
+    router.replace("/(root)/(auth)/sign-in");
+  };
+
+  const handleBack = () => {
     router.replace("/(root)/(auth)/sign-in");
   };
 
@@ -93,7 +91,7 @@ export default function SignUpScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <BackHeader />
+          <BackHeader onBack={handleBack} />
 
           {/* App icon above title */}
           <AppIcon size={CIRCLE_ICON_SIZE} className="self-center my-6" />
@@ -102,29 +100,18 @@ export default function SignUpScreen() {
             className="text-2xl font-bold text-neutral-900 text-center mb-2"
             accessibilityRole="header"
           >
-            Create Your Account?
+            Forgot Password?
           </Text>
           <Text
-            className="text-base text-neutral-600 text-left mb-6"
+            className="text-base text-neutral-600 text-center mb-6"
             accessibilityRole="summary"
           >
-            Create your account to explore exciting travel destinations and
-            adventures.
+            Enter your email and we&apos;ll send a 5-digit verification code
+            instantly.
           </Text>
 
           <FormField
-            label="Full Name"
-            value={name}
-            onChangeText={(text: string) => {
-              setName(text);
-              if (nameError) setNameError("");
-            }}
-            placeholder="Alex Smith"
-            error={nameError}
-            autoCapitalize="words"
-          />
-          <FormField
-            label="Email"
+            label="Email address*"
             value={email}
             onChangeText={(text: string) => {
               setEmail(text);
@@ -133,16 +120,6 @@ export default function SignUpScreen() {
             placeholder="example@gmail.com"
             error={emailError}
             keyboardType="email-address"
-          />
-          <PasswordField
-            label="Password"
-            value={password}
-            onChangeText={(text: string) => {
-              setPassword(text);
-              if (passwordError) setPasswordError("");
-            }}
-            placeholder="@Sn123hsn#"
-            error={passwordError}
           />
 
           {contextError ? (
@@ -156,8 +133,8 @@ export default function SignUpScreen() {
           ) : null}
 
           <Button
-            onPress={handleRegister}
-            title="Register"
+            onPress={handleSendCode}
+            title="Send Code"
             loading={loading}
             className="w-full py-4 rounded-full bg-[#e7f160] shadow-none mt-2 mb-4"
             textClassName="text-neutral-900 font-semibold text-lg"
@@ -165,17 +142,6 @@ export default function SignUpScreen() {
               <PencilSimpleLine size={22} color="#171717" weight="bold" />
             )}
           />
-
-          <Text
-            className="text-center text-neutral-500 text-sm mb-3"
-            accessibilityRole="text"
-          >
-            Or continue with
-          </Text>
-          <View className="flex-row gap-3 mb-6">
-            <SocialButton provider="google" />
-            <SocialButton provider="apple" />
-          </View>
 
           <View className="flex-row flex-wrap justify-center items-center gap-1 pb-8">
             <Text className="text-neutral-600 text-base">

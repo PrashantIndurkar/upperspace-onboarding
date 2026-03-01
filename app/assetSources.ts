@@ -1,6 +1,8 @@
 /**
  * Image sources required from app folder so Metro bundles them.
  */
+export const appIcon = require("../assets/icons/icon.png");
+
 export const collageImages = {
   des1: require("../assets/des-1.jpg"),
   des2: require("../assets/des-2.jpg"),

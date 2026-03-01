@@ -32,7 +32,7 @@ const getTextVariantStyles = (variant: ButtonProps["variant"]) => {
       return "text-gray-100";
     case "primary":
     default:
-      return "text-white";
+      return "text-neutral-900";
   }
 };
 
@@ -56,7 +56,7 @@ const Button: React.FC<ButtonProps> = ({
     accessibilityLabel={title}
   >
     {loading ? (
-      <ActivityIndicator color={variant === "outline" ? "gray" : "white"} />
+      <ActivityIndicator color={variant === "outline" ? "gray" : "#171717"} />
     ) : (
       <>
         {IconLeft && <IconLeft />}
