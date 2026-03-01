@@ -1,108 +1,56 @@
-import Animated, {
-  Easing,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from "react-native-reanimated";
-import { useEffect, useMemo } from "react";
-import { Text, useWindowDimensions } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import { useCallback, useEffect, useState } from "react";
+import { LayoutChangeEvent, Text, View } from "react-native";
 
-const CIRCLE_BASE_SIZE = 200;
-const CIRCLE_HALF = CIRCLE_BASE_SIZE / 2;
-const TEXT_DISPLAY_MS = 2000;
-const HOLD_MS = 300;
-const FADE_OUT_MS = 450;
-const CIRCLE_GROW_MS = 800;
-const EASING_OUT_CUBIC = Easing.out(Easing.cubic);
+const MIN_SPLASH_DURATION_MS = 2000;
 
-type AnimatedSplashScreenProps = {
+type SplashScreenProps = {
   onComplete: () => void;
+  /** When false, splash waits before completing. Set from e.g. useFonts() so app is ready (fonts, init) before showing main UI. Default true. */
+  isAppReady?: boolean;
 };
 
+/**
+ * Simple splash: company/app name only, then main app.
+ * Hides native splash only after this view has painted (seamless handoff).
+ * Completes after min duration and when isAppReady is true (e.g. fonts loaded).
+ */
 export function AnimatedSplashScreen({
   onComplete,
-}: AnimatedSplashScreenProps) {
-  const { width, height } = useWindowDimensions();
-  const circleScale = useSharedValue(0);
-  const containerOpacity = useSharedValue(1);
+  isAppReady = true,
+}: SplashScreenProps) {
+  const [hasPainted, setHasPainted] = useState(false);
 
-  const scaleToEdge = useMemo(
-    () =>
-      Math.ceil(Math.sqrt(width * width + height * height) / CIRCLE_BASE_SIZE) +
-      0.5,
-    [width, height],
-  );
+  const handleLayout = useCallback((_e: LayoutChangeEvent) => {
+    setHasPainted(true);
+  }, []);
 
-  const circleStaticStyle = useMemo(
-    () => ({
-      position: "absolute" as const,
-      left: width / 2 - CIRCLE_HALF,
-      top: height / 2 - CIRCLE_HALF,
-      width: CIRCLE_BASE_SIZE,
-      height: CIRCLE_BASE_SIZE,
-      borderRadius: CIRCLE_HALF,
-      backgroundColor: "#ffffff",
-    }),
-    [width, height],
-  );
-
-  const animatedCircleStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: circleScale.value }],
-  }));
-
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    opacity: containerOpacity.value,
-  }));
-
+  // Hide native splash only after our view has been laid out and painted
   useEffect(() => {
-    const triggerFadeOut = () => {
-      containerOpacity.value = withDelay(
-        HOLD_MS,
-        withTiming(
-          0,
-          { duration: FADE_OUT_MS, easing: EASING_OUT_CUBIC },
-          (finished) => {
-            if (finished) runOnJS(onComplete)();
-          },
-        ),
-      );
-    };
+    if (!hasPainted) return;
+    SplashScreen.hideAsync().catch(() => {});
+  }, [hasPainted]);
 
-    circleScale.value = withDelay(
-      TEXT_DISPLAY_MS,
-      withTiming(
-        scaleToEdge,
-        {
-          duration: CIRCLE_GROW_MS,
-          easing: EASING_OUT_CUBIC,
-        },
-        (finished) => {
-          if (finished) runOnJS(triggerFadeOut)();
-        },
-      ),
-    );
-  }, [scaleToEdge, onComplete, circleScale, containerOpacity]);
+  // Complete when both min duration has elapsed and app is ready (e.g. fonts loaded)
+  useEffect(() => {
+    if (!isAppReady) return;
+    const t = setTimeout(onComplete, MIN_SPLASH_DURATION_MS);
+    return () => clearTimeout(t);
+  }, [isAppReady, onComplete]);
 
   return (
-    <Animated.View
-      style={animatedContainerStyle}
-      className="absolute inset-0 z-50 flex-1 items-center justify-center bg-black"
-      accessibilityLabel="Upper Space app loading"
-      accessibilityRole="progressbar"
-      accessibilityLiveRegion="polite"
+    <View
+      className="flex-1 items-center justify-center bg-black"
+      onLayout={handleLayout}
+      accessibilityLabel="Upper Space"
+      accessibilityRole="image"
     >
-      <Animated.View
-        style={[animatedCircleStyle, circleStaticStyle]}
-        pointerEvents="none"
-      />
       <Text
-        className="text-4xl font-bold tracking-tight text-white z-10"
+        className="text-2xl font-semibold text-white"
         accessibilityElementsHidden
       >
         UpperSpace
       </Text>
-    </Animated.View>
+    </View>
   );
 }
