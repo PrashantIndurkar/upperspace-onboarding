@@ -5,6 +5,12 @@ A React Native (Expo) app with **Login**, **Signup**, and **Home** screens, usin
 ---
 
 ## Screenshots / video
+
+- Inspiration and final Screens: [Notion Docs](https://www.notion.so/prashantindurkar/Kloudius-com-Take-home-Task-317990060d7580f89668f975df7f0406)
+- Full walkthrow video demo: [Google Drive](https://drive.google.com/file/d/1TPfRkYyo9-Tu6BfrDMolya7WZUY7AB3I/view?usp=sharing)
+
+- ScreenShots
+
 <img width="1069" height="560" alt="image" src="https://github.com/user-attachments/assets/ac15497e-781f-48c7-afe1-7eebb66cc2e2" />
 <img width="1048" height="1115" alt="image" src="https://github.com/user-attachments/assets/84648ab5-f00d-47aa-ad3a-222f800ee752" />
 <img width="1131" height="1132" alt="image" src="https://github.com/user-attachments/assets/a2f2ac48-8fcf-427d-bd5a-73f90c369461" />
@@ -13,8 +19,6 @@ A React Native (Expo) app with **Login**, **Signup**, and **Home** screens, usin
 <img width="1055" height="552" alt="image" src="https://github.com/user-attachments/assets/b34400e0-7f48-47b9-a8dd-7a1fa87f5d40" />
 
 
-- Inspiration and final Screens: [Notion Docs](https://www.notion.so/prashantindurkar/Kloudius-com-Take-home-Task-317990060d7580f89668f975df7f0406)
-- Full walkthrow video demo: [Google Drive](https://drive.google.com/file/d/1TPfRkYyo9-Tu6BfrDMolya7WZUY7AB3I/view?usp=sharing)
 
 
 ---
