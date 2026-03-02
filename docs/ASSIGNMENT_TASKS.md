@@ -8,7 +8,7 @@ All requirements from the assignment brief, in Todoist-style checklist form.
 | Status    | Meaning                          |
 | --------- | -------------------------------- |
 | ✅ Done    | Implemented and verified         |
-| ⬜ Pending | Not done yet (deliverables only) |
+| ✅ Done | Videos, Github repo, ScreenShots, Notion docs |
 
 
 ---
