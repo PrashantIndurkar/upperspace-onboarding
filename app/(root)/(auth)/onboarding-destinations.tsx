@@ -3,12 +3,12 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
-import DestinationCollage from "../../components/welcome/DestinationCollage";
-import SkipButton from "../../components/welcome/SkipButton";
-import { Title, Subtitle } from "../../../components/common/Typography";
-import Button from "../../../components/common/Button";
+import DestinationCollage from "@/app/components/onboarding/DestinationCollage";
+import SkipButton from "@/app/components/onboarding/SkipButton";
+import { Title, Subtitle } from "@/app/components/common/Typography";
+import Button from "@/app/components/common/Button";
 
-const WelcomeDestinationScreen = () => {
+const OnboardingDestinationsScreen = () => {
   const router = useRouter();
 
   const handleGetStarted = () => {
@@ -34,7 +34,7 @@ const WelcomeDestinationScreen = () => {
           <Button
             title="Get Started"
             onPress={handleGetStarted}
-            className="w-full py-4 rounded-full bg-[#e7f160] shadow-none"
+            className="w-full py-4 rounded-full bg-primary shadow-none"
             textClassName="text-neutral-900 font-semibold text-lg"
           />
         </View>
@@ -43,4 +43,4 @@ const WelcomeDestinationScreen = () => {
   );
 };
 
-export default WelcomeDestinationScreen;
+export default OnboardingDestinationsScreen;

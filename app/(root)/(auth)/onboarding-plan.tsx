@@ -6,21 +6,21 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-import SkipButton from "../../components/welcome/SkipButton";
-import { Title, Subtitle } from "../../../components/common/Typography";
-import Button from "../../../components/common/Button";
+import SkipButton from "@/app/components/onboarding/SkipButton";
+import { Title, Subtitle } from "@/app/components/common/Typography";
+import Button from "@/app/components/common/Button";
 
 const OVERLAY_HEIGHT_RATIO = 0.35;
 
-const Welcome2Screen = () => {
+const OnboardingPlanScreen = () => {
   const router = useRouter();
-  const { width, height } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
   const overlayHeight = height * OVERLAY_HEIGHT_RATIO;
 
   const handleContinue = () => {
-    router.push("/(root)/(auth)/welcome-destination");
+    router.push("/(root)/(auth)/onboarding-destinations");
   };
 
   return (
@@ -54,7 +54,7 @@ const Welcome2Screen = () => {
           <Button
             title="Continue"
             onPress={handleContinue}
-            className="w-full py-4 rounded-full bg-[#e7f160] shadow-none"
+            className="w-full py-4 rounded-full bg-primary shadow-none"
             textClassName="text-neutral-900 font-semibold text-lg"
           />
         </View>
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Welcome2Screen;
+export default OnboardingPlanScreen;

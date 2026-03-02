@@ -17,6 +17,7 @@ import Button from "@/app/components/common/Button";
 import { AppIcon } from "@/app/components/common/AppIcon";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { validateForgotPassword } from "@/app/utils/validation";
+import { colors } from "@/app/theme/colors";
 
 const CIRCLE_ICON_SIZE = 80;
 
@@ -35,9 +36,7 @@ export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
 
   const setFieldErrors = (errors: string[]) => {
-    setEmailError(
-      errors.find((e) => EMAIL_ERROR_MESSAGES.includes(e)) ?? ""
-    );
+    setEmailError(errors.find((e) => EMAIL_ERROR_MESSAGES.includes(e)) ?? "");
     const mapped = new Set(EMAIL_ERROR_MESSAGES);
     setContextError(errors.find((e) => !mapped.has(e)) ?? "");
   };
@@ -60,7 +59,7 @@ export default function ForgotPasswordScreen() {
             text: "OK",
             onPress: () => router.replace("/(root)/(auth)/sign-in"),
           },
-        ]
+        ],
       );
     } catch (err) {
       const message =
@@ -136,10 +135,10 @@ export default function ForgotPasswordScreen() {
             onPress={handleSendCode}
             title="Send Code"
             loading={loading}
-            className="w-full py-4 rounded-full bg-[#e7f160] shadow-none mt-2 mb-4"
+            className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"
             textClassName="text-neutral-900 font-semibold text-lg"
             IconLeft={() => (
-              <PencilSimpleLine size={22} color="#171717" weight="bold" />
+              <PencilSimpleLine size={22} color={colors.icon} weight="bold" />
             )}
           />
 

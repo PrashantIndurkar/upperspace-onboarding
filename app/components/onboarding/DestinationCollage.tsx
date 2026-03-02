@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { Image } from "expo-image";
-import { collageImages } from "../../assetSources";
+import { collageImages } from "@/app/assetSources";
 
 // -----------------------------------------------------------------------------
 // Static layout: edit these to change sizes. All values in pixels.

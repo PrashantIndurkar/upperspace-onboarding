@@ -6,28 +6,19 @@ import {
   TextInput,
   Pressable,
   ScrollView,
-  StyleSheet,
   Platform,
-  Modal,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import {
-  MagnifyingGlass,
-  User,
-  UsersThree,
-  Gear,
-  SignOut,
-} from "phosphor-react-native";
+import { MagnifyingGlass, User } from "phosphor-react-native";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { collageImages } from "@/app/assetSources";
 import { LogoutConfirmModal } from "@/app/components/common/LogoutConfirmModal";
+import { UserMenuModal } from "@/app/components/home/UserMenuModal";
+import { DestinationCard } from "@/app/components/home/DestinationCard";
+import { colors } from "@/app/theme/colors";
 
 const SEARCH_INPUT_HEIGHT = 48;
-const HERO_BORDER_RADIUS = 28;
-const CARD_HEIGHT = 200;
-const MENU_ICON_SIZE = 20;
-const MENU_ICON_COLOR = "#525252";
 
 const DESTINATION_CARDS = [
   {
@@ -83,7 +74,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.screen} className="flex-1">
+    <View className="flex-1 bg-transparent">
       <ScrollView
         className="flex-1"
         contentContainerStyle={{
@@ -106,6 +97,15 @@ export default function HomeScreen() {
               >
                 Hey {displayName} 👋
               </Text>
+              {user?.email ? (
+                <Text
+                  className="text-sm text-neutral-500 mt-0.5"
+                  accessibilityLabel={`Signed in as ${user.email}`}
+                  accessibilityRole="text"
+                >
+                  {user.email}
+                </Text>
+              ) : null}
               <Text className="text-base text-neutral-600 mt-0.5">
                 Find your next destination.
               </Text>
@@ -116,66 +116,15 @@ export default function HomeScreen() {
               accessibilityLabel="Open user menu"
               accessibilityRole="button"
             >
-              <User size={22} color="#171717" weight="regular" />
+              <User size={22} color={colors.icon} weight="regular" />
             </Pressable>
           </View>
 
-          {/* User menu dropdown (Modal) */}
-          <Modal
+          <UserMenuModal
             visible={menuVisible}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setMenuVisible(false)}
-          >
-            <Pressable
-              className="flex-1"
-              style={{ paddingTop: insets.top + 8, paddingRight: 20, alignItems: "flex-end" }}
-              onPress={() => setMenuVisible(false)}
-              accessibilityLabel="Close menu"
-              accessibilityRole="button"
-            >
-              <Pressable
-                className="bg-white border border-neutral-200 rounded-2xl py-2 min-w-[220]"
-                onPress={(e) => e.stopPropagation()}
-                accessibilityRole="menu"
-                accessibilityViewIsModal
-              >
-                <View
-                  className="flex-row items-center gap-3 px-4 py-3"
-                  accessibilityRole="menuitem"
-                  accessibilityLabel="Profile"
-                >
-                  <User size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} weight="regular" />
-                  <Text className="text-base text-neutral-900">Profile</Text>
-                </View>
-                <View
-                  className="flex-row items-center gap-3 px-4 py-3"
-                  accessibilityRole="menuitem"
-                  accessibilityLabel="Community subscription"
-                >
-                  <UsersThree size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} weight="regular" />
-                  <Text className="text-base text-neutral-900">Community subscription</Text>
-                </View>
-                <View
-                  className="flex-row items-center gap-3 px-4 py-3"
-                  accessibilityRole="menuitem"
-                  accessibilityLabel="Settings"
-                >
-                  <Gear size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} weight="regular" />
-                  <Text className="text-base text-neutral-900">Settings</Text>
-                </View>
-                <Pressable
-                  onPress={handleSignOutPress}
-                  className="flex-row items-center gap-3 px-4 py-3"
-                  accessibilityRole="menuitem"
-                  accessibilityLabel="Sign out"
-                >
-                  <SignOut size={MENU_ICON_SIZE} color={MENU_ICON_COLOR} weight="regular" />
-                  <Text className="text-base text-neutral-900">Sign out</Text>
-                </Pressable>
-              </Pressable>
-            </Pressable>
-          </Modal>
+            onClose={() => setMenuVisible(false)}
+            onSignOut={handleSignOutPress}
+          />
 
           <LogoutConfirmModal
             visible={logoutModalVisible}
@@ -185,26 +134,30 @@ export default function HomeScreen() {
 
           {/* Search bar */}
           <View className="px-5 mb-4">
-            <View
-              className="flex-row items-center rounded-full border border-neutral-300 bg-white pr-2"
-              style={styles.searchContainer}
-            >
+            <View className="flex-row items-center rounded-full border border-neutral-300 bg-white pr-2 min-h-12">
               <View className="pl-4 pr-2 justify-center" pointerEvents="none">
-                <MagnifyingGlass size={20} color="#525252" weight="regular" />
+                <MagnifyingGlass
+                  size={20}
+                  color={colors.iconMuted}
+                  weight="regular"
+                />
               </View>
               <TextInput
-                className="flex-1 text-base text-neutral-900"
-                style={styles.searchInput}
+                className="flex-1 text-base text-neutral-900 py-0 px-2"
+                style={[
+                  { height: SEARCH_INPUT_HEIGHT },
+                  Platform.OS === "android" && { includeFontPadding: false },
+                ]}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
                 placeholder="Search destinations or activities"
-                placeholderTextColor="#a3a3a3"
+                placeholderTextColor={colors.placeholder}
                 accessibilityLabel="Search destinations or activities"
                 returnKeyType="search"
               />
               <Pressable
                 onPress={handleNearbyPress}
-                className="rounded-full bg-[#e7f160] px-4 py-2.5"
+                className="rounded-full bg-primary px-4 py-2.5"
                 accessibilityLabel="Nearby"
                 accessibilityRole="button"
               >
@@ -216,14 +169,10 @@ export default function HomeScreen() {
           </View>
 
           {/* Hero image with overlays */}
-          <View
-            className="mx-5 overflow-hidden rounded-[28px]"
-            style={styles.heroWrapper}
-          >
+          <View className="mx-5 overflow-hidden rounded-[28px] h-[280px]">
             <Image
               source={collageImages.des1}
-              className="w-full"
-              style={styles.heroImage}
+              className="w-full h-full rounded-[28px]"
               resizeMode="cover"
               accessibilityLabel="Featured destination"
             />
@@ -236,7 +185,7 @@ export default function HomeScreen() {
             {/* Bottom: dark overlay — text left, button right */}
             <View
               className="absolute left-0 right-0 bottom-0 px-4 pb-4 pt-8 rounded-b-[28px] flex-row items-end justify-between"
-              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+              style={{ backgroundColor: colors.overlay }}
             >
               <View className="flex-1 mr-3">
                 <Text
@@ -265,50 +214,14 @@ export default function HomeScreen() {
           {/* Destination cards below hero */}
           <View className="mx-5 mt-5 pb-1">
             {DESTINATION_CARDS.map((card, index) => (
-              <View
+              <DestinationCard
                 key={index}
-                className="overflow-hidden rounded-[28px] mb-3.5"
-                style={styles.destinationCard}
-              >
-                <Image
-                  source={card.image}
-                  className="w-full"
-                  style={[
-                    styles.destinationCardImage,
-                    { borderRadius: HERO_BORDER_RADIUS },
-                  ]}
-                  resizeMode="cover"
-                  accessibilityLabel={card.title}
-                />
-                <View className="absolute left-3 top-3 flex-row items-center gap-1.5 rounded px-2 py-1 bg-black/40">
-                  <Text className="text-white text-xs font-semibold">
-                    {card.country}
-                  </Text>
-                </View>
-                <View
-                  className="absolute left-0 right-0 bottom-0 px-4 pb-3 pt-6 rounded-b-[28px] flex-row items-end justify-between"
-                  style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-                >
-                  <View className="flex-1 mr-3">
-                    <Text className="text-white text-lg font-bold leading-tight mb-0.5">
-                      {card.title}
-                    </Text>
-                    <Text className="text-white/90 text-sm">
-                      {card.description}
-                    </Text>
-                  </View>
-                  <Pressable
-                    onPress={handleExploreNowPress}
-                    className="rounded-full border border-white bg-neutral-900/80 px-4 py-2"
-                    accessibilityLabel={`Explore ${card.title}`}
-                    accessibilityRole="button"
-                  >
-                    <Text className="text-white font-semibold text-sm">
-                      Explore now
-                    </Text>
-                  </Pressable>
-                </View>
-              </View>
+                image={card.image}
+                country={card.country}
+                title={card.title}
+                description={card.description}
+                onExplorePress={handleExploreNowPress}
+              />
             ))}
           </View>
         </View>
@@ -316,34 +229,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: "transparent",
-  },
-  searchContainer: {
-    minHeight: SEARCH_INPUT_HEIGHT,
-  },
-  searchInput: {
-    height: SEARCH_INPUT_HEIGHT,
-    paddingVertical: 0,
-    paddingHorizontal: 8,
-    ...(Platform.OS === "android" && { includeFontPadding: false }),
-  },
-  heroWrapper: {
-    height: 280,
-  },
-  heroImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: HERO_BORDER_RADIUS,
-  },
-  destinationCard: {
-    height: CARD_HEIGHT,
-  },
-  destinationCardImage: {
-    width: "100%",
-    height: "100%",
-  },
-});

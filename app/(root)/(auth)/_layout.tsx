@@ -5,18 +5,18 @@ export default function AuthLayout() {
   return (
     <SafeAreaProvider>
       <Stack>
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
-        <Stack.Screen name="welcome-2" options={{ headerShown: false }} />
         <Stack.Screen
-          name="welcome-destination"
+          name="onboarding-intro"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="onboarding-plan" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="onboarding-destinations"
           options={{ headerShown: false }}
         />
         <Stack.Screen name="sign-up" options={{ headerShown: false }} />
         <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="forgot-password"
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
       </Stack>
     </SafeAreaProvider>
   );

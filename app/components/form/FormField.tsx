@@ -1,5 +1,6 @@
 import React, { type ReactNode } from "react";
-import { View, Text, TextInput, Platform, StyleSheet } from "react-native";
+import { View, Text, TextInput, Platform } from "react-native";
+import { colors } from "@/app/theme/colors";
 
 /** Fixed height for single-line inputs: prevents growth when typing and keeps text vertically centered. */
 const INPUT_HEIGHT = 48;
@@ -39,19 +40,19 @@ export default function FormField({
       >
         {label}
       </Text>
-      <View className="flex-row items-center" style={styles.inputWrapper}>
+      <View className="flex-row items-center min-h-12">
         <TextInput
-          className={`flex-1 rounded-xl border text-base text-neutral-900 bg-white ${
+          className={`flex-1 rounded-xl border text-base text-neutral-900 bg-white px-4 ${
             hasError ? "border-red-500" : "border-neutral-300"
           } ${rightElement != null ? "pr-12" : ""} ${!editable ? "opacity-70" : ""}`}
           style={[
-            styles.input,
-            Platform.OS === "android" && styles.inputAndroid,
+            { height: INPUT_HEIGHT, paddingVertical: 0, textAlignVertical: "center" },
+            Platform.OS === "android" && { includeFontPadding: false },
           ]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor="#a3a3a3"
+          placeholderTextColor={colors.placeholder}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
@@ -78,18 +79,3 @@ export default function FormField({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  inputWrapper: {
-    minHeight: INPUT_HEIGHT,
-  },
-  input: {
-    height: INPUT_HEIGHT,
-    paddingHorizontal: 16,
-    paddingVertical: 0,
-    textAlignVertical: "center",
-  },
-  inputAndroid: {
-    includeFontPadding: false,
-  },
-});

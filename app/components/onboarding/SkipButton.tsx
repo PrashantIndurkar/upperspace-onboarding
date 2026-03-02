@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { CaretLeft, CaretRight } from "phosphor-react-native";
+import { colors } from "@/app/theme/colors";
 
 const HIT_SLOP = { top: 0, bottom: 12, left: 12, right: 12 };
 const ICON_SIZE = 22;
@@ -20,7 +21,7 @@ const SkipButton = ({ variant = "light" }: SkipButtonProps) => {
   const router = useRouter();
   const canGoBack = router.canGoBack();
   const isDark = variant === "dark";
-  const iconColor = isDark ? "#ffffff" : "#171717";
+  const iconColor = isDark ? "#ffffff" : colors.icon;
 
   const handleSkip = () => {
     router.replace("/(root)/(auth)/sign-up");

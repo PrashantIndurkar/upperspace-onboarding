@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { colors } from "@/app/theme/colors";
 
 interface ButtonProps {
   onPress: () => void;
@@ -20,7 +21,7 @@ const getVariantStyles = (variant: ButtonProps["variant"]) => {
       return "bg-transparent border border-neutral-300";
     case "primary":
     default:
-      return "bg-[#0286FF] shadow-md shadow-neutral-400/70";
+      return "bg-primary shadow-md shadow-neutral-400/70";
   }
 };
 
@@ -56,7 +57,7 @@ const Button: React.FC<ButtonProps> = ({
     accessibilityLabel={title}
   >
     {loading ? (
-      <ActivityIndicator color={variant === "outline" ? "gray" : "#171717"} />
+      <ActivityIndicator color={variant === "outline" ? "gray" : colors.icon} />
     ) : (
       <>
         {IconLeft && <IconLeft />}

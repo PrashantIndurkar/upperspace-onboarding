@@ -1,40 +1,79 @@
-# Welcome to your Expo app 👋
+# UpperSpace – User Authentication App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native (Expo) app with **Login**, **Signup**, and **Home** screens, using React Context API for authentication state and optional persistence with AsyncStorage.
 
-## Get started
+---
 
-1. Install dependencies
+## Setup
 
-   ```bash
-   npm install
-   ```
+1. **Clone and install**
 
-2. Start the app
+```bash
+ git clone https://github.com/PrashantIndurkar/upperspace-onboarding.git
+ cd upperspace
+ pnpm install
+```
 
-   ```bash
-   npx expo start
-   ```
+1. **Start the app**
 
-In the output, you'll find options to open the app in a
+```bash
+ npx expo start
+```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1. **Run on device or simulator**
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **iOS simulator:** Press `i` in the terminal, or run `npx expo run:ios` (requires Xcode).
+- **Android emulator:** Press `a` in the terminal, or run `npx expo run:android` (requires Android Studio).
+- **Expo Go:** Scan the QR code with the Expo Go app on your phone.
+
+---
+
+## Implemented Features
+
+- **AuthContext** – Global auth state with `login`, `signup`, `logout`, and `user` (React Context API).
+- **Login screen** – Email & password inputs, validation (format + credentials), “Login” button, “Go to Signup” navigation.
+- **Signup screen** – Name, email & password inputs, validation (missing fields, email format, password ≥ 6 chars), “Signup” button, “Go to Login” navigation.
+- **Home screen** – Displays logged-in user’s **name** and **email**, and a “Logout” button that returns to Login.
+- **Persist authentication** – AsyncStorage keeps the user logged in after closing and reopening the app.
+- **Navigation** – Expo Router (React Navigation) between Login, Signup, and Home.
+- **UI** – Clear layouts, styled inputs/buttons, inline and context error messages.
+- **Bonus: Password visibility toggle** – Eye icon on password fields to show/hide password.
+
+For a full checklist of assignment requirements, see **[ASSIGNMENT_TASKS.md](./docs/ASSIGNMENT_TASKS.md)**.  
+For flow diagrams, tech stack, and technical details, see **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)**.
+
+---
+
+## Project structure
+
+- `app/` – Screens and layouts (file-based routing).
+- `app/contexts/AuthContext.tsx` – Authentication state and actions.
+- `app/utils/validation.ts` – Email and form validation.
+- `app/components/` – Reusable UI (form fields, buttons, modals, auth headers).
+
+---
+
+## Tech stack
+
+- **Expo** ~54,
+- **React Native** 0.81,
+- **React** 19
+- **Expo Router** (file-based routing, built on React Navigation)
+- **NativeWind** (Tailwind-style styling)
+- **TypeScript**
+- **@react-native-async-storage/async-storage** – Auth persistence
+
+---
+
+## Screenshots / video
+
+Add screenshots or a short demo video in a folder (e.g. `docs/screenshots/`) and link them here to demonstrate Login, Signup, Home, and logout flows.
+
+---
 
 ## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
+- [Expo documentation](https://docs.expo.dev/)
+- [Expo Router](https://docs.expo.dev/router/introduction/)
+- [React Native](https://reactnative.dev/)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

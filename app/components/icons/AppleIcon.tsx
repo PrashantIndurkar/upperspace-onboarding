@@ -1,5 +1,6 @@
 import React from "react";
 import Svg, { Path } from "react-native-svg";
+import { colors as themeColors } from "@/app/theme/colors";
 
 const VIEWBOX_SIZE = 128;
 
@@ -15,7 +16,7 @@ interface AppleIconProps {
  */
 export default function AppleIcon({
   size = 24,
-  color = "#171717",
+  color = themeColors.icon,
   accessibilityLabel = "Apple",
 }: AppleIconProps) {
   return (

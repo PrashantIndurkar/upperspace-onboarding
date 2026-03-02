@@ -9,7 +9,7 @@ export default function RootGroupLayout() {
       }}
     >
       <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="home" />
     </Stack>
   );
 }

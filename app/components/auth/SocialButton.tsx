@@ -2,6 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import GoogleIcon from "@/app/components/icons/GoogleIcon";
 import AppleIcon from "@/app/components/icons/AppleIcon";
+import { colors } from "@/app/theme/colors";
 
 const ICON_SIZE = 22;
 
@@ -33,7 +34,7 @@ export default function SocialButton({
       {provider === "google" ? (
         <GoogleIcon size={ICON_SIZE} accessibilityLabel="" />
       ) : (
-        <AppleIcon size={ICON_SIZE} color="#171717" accessibilityLabel="" />
+        <AppleIcon size={ICON_SIZE} color={colors.icon} accessibilityLabel="" />
       )}
       <Text className="text-neutral-900 font-semibold text-base">{label}</Text>
     </TouchableOpacity>

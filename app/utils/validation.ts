@@ -1,7 +1,7 @@
 /**
  * Simple email validation (local part @ domain with TLD).
  */
-export function isValidEmail(email: string): boolean {
+function isValidEmail(email: string): boolean {
   return /.+@.+\.[a-zA-Z]{2,}$/.test(email.trim());
 }
 

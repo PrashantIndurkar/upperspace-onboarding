@@ -18,6 +18,7 @@ import Button from "@/app/components/common/Button";
 import { AppIcon } from "@/app/components/common/AppIcon";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { validateLogin } from "@/app/utils/validation";
+import { colors } from "@/app/theme/colors";
 
 const CIRCLE_ICON_SIZE = 80;
 
@@ -55,7 +56,7 @@ export default function SignInScreen() {
     setLoading(true);
     try {
       await login(email, password);
-      router.replace("/(root)/(tabs)/home");
+      router.replace("/(root)/home");
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Incorrect credentials.";
@@ -181,10 +182,10 @@ export default function SignInScreen() {
             onPress={handleSignIn}
             title="Sign in"
             loading={loading}
-            className="w-full py-4 rounded-full bg-[#e7f160] shadow-none mt-2 mb-4"
+            className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"
             textClassName="text-neutral-900 font-semibold text-lg"
             IconLeft={() => (
-              <SignInIcon size={22} color="#171717" weight="bold" />
+              <SignInIcon size={22} color={colors.icon} weight="bold" />
             )}
           />
 

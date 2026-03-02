@@ -2,6 +2,7 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { CaretLeft } from "phosphor-react-native";
+import { colors } from "@/app/theme/colors";
 
 const HIT_SLOP = { top: 12, bottom: 12, left: 12, right: 12 };
 const ICON_SIZE = 22;
@@ -31,7 +32,7 @@ export default function BackHeader({ onBack }: BackHeaderProps) {
         accessibilityLabel="Go back"
         accessibilityRole="button"
       >
-        <CaretLeft size={ICON_SIZE} color="#171717" weight="bold" />
+        <CaretLeft size={ICON_SIZE} color={colors.icon} weight="bold" />
       </TouchableOpacity>
       {/* Reserve space for layout (no right icon) */}
       <View className="min-h-12 min-w-12" />

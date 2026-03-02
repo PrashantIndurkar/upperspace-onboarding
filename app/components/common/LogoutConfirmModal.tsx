@@ -4,10 +4,10 @@ import {
   View,
   Text,
   Pressable,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { colors } from "@/app/theme/colors";
 
 export interface LogoutConfirmModalProps {
   visible: boolean;
@@ -31,20 +31,20 @@ export function LogoutConfirmModal({
       transparent
       animationType="fade"
       accessibilityLabel="Sign out confirmation"
-      accessibilityRole="alertdialog"
     >
       <Pressable
-        style={styles.backdrop}
+        className="flex-1 justify-center items-center p-6"
+        style={{ backgroundColor: colors.overlayLight }}
         onPress={onClose}
         accessibilityLabel="Close modal"
         accessibilityRole="button"
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : undefined}
-          style={styles.center}
+          className="w-full max-w-[340px] justify-center items-center"
         >
           <Pressable
-            style={styles.card}
+            className="w-full bg-white rounded-2xl p-6 border border-neutral-200"
             onPress={(e) => e.stopPropagation()}
             accessibilityViewIsModal
           >
@@ -65,7 +65,7 @@ export function LogoutConfirmModal({
               </Pressable>
               <Pressable
                 onPress={handleConfirm}
-                className="flex-1 py-3 rounded-full bg-[#e7f160] items-center justify-center"
+                className="flex-1 py-3 rounded-full bg-primary items-center justify-center"
                 accessibilityLabel="Log out"
                 accessibilityRole="button"
               >
@@ -78,27 +78,3 @@ export function LogoutConfirmModal({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 24,
-  },
-  center: {
-    width: "100%",
-    maxWidth: 340,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  card: {
-    width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 24,
-    borderWidth: 1,
-    borderColor: "#e5e5e5",
-  },
-});

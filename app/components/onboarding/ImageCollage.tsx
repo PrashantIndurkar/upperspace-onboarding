@@ -20,7 +20,7 @@ const IMG_1 = {
   top: -15,
   zIndex: 1,
   rotate: "0deg",
-  source: require("../../assets/des-2.jpg"),
+  source: require("../../../assets/des-2.jpg"),
 };
 
 /** Image 2: top-right (e.g. wooden structure by water). Smaller, roughly square. */
@@ -31,7 +31,7 @@ const IMG_2 = {
   top: -25,
   zIndex: 1,
   rotate: "0deg",
-  source: require("../../assets/des-4.jpg"),
+  source: require("../../../assets/des-4.jpg"),
 };
 
 /** Image 3: center foreground (e.g. hiker / island). Large portrait, rotated. */
@@ -42,7 +42,7 @@ const IMG_3 = {
   top: 200,
   zIndex: 2,
   rotate: "-12deg",
-  source: require("../../assets/des-1.jpg"),
+  source: require("../../../assets/des-1.jpg"),
 };
 
 /** Image 4: far right, partially visible (e.g. pool / palm). Behind center image. */
@@ -53,7 +53,7 @@ const IMG_4 = {
   height: 530,
   zIndex: 1,
   rotate: "0deg",
-  source: require("../../assets/des-3.jpg"),
+  source: require("../../../assets/des-3.jpg"),
 };
 
 // -----------------------------------------------------------------------------

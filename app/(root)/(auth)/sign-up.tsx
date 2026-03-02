@@ -18,6 +18,7 @@ import Button from "@/app/components/common/Button";
 import { AppIcon } from "@/app/components/common/AppIcon";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { validateSignUp } from "@/app/utils/validation";
+import { colors } from "@/app/theme/colors";
 
 const CIRCLE_ICON_SIZE = 80;
 
@@ -81,6 +82,12 @@ export default function SignUpScreen() {
     router.replace("/(root)/(auth)/sign-in");
   };
 
+  /** Back from sign-up always goes to sign-in; we use explicit navigation because
+   *  sign-in uses router.replace() to open sign-up, so there is no stack entry to go back to. */
+  const handleBack = () => {
+    router.replace("/(root)/(auth)/sign-in");
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -93,7 +100,7 @@ export default function SignUpScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <BackHeader />
+          <BackHeader onBack={handleBack} />
 
           {/* App icon above title */}
           <AppIcon size={CIRCLE_ICON_SIZE} className="self-center my-6" />
@@ -159,10 +166,10 @@ export default function SignUpScreen() {
             onPress={handleRegister}
             title="Register"
             loading={loading}
-            className="w-full py-4 rounded-full bg-[#e7f160] shadow-none mt-2 mb-4"
+            className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"
             textClassName="text-neutral-900 font-semibold text-lg"
             IconLeft={() => (
-              <PencilSimpleLine size={22} color="#171717" weight="bold" />
+              <PencilSimpleLine size={22} color={colors.icon} weight="bold" />
             )}
           />
 

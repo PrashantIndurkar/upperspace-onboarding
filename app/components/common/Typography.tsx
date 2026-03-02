@@ -17,9 +17,3 @@ export const Subtitle: React.FC<TypographyProps> = ({ children, className = "" }
     {children}
   </Text>
 );
-
-export const Body: React.FC<TypographyProps> = ({ children, className = "" }) => (
-  <Text className={`text-base font-normal text-gray-700 ${className}`}>
-    {children}
-  </Text>
-);
