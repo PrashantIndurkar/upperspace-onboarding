@@ -1,23 +1,24 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-} from "react-native";
+import BackHeader from "@/app/components/auth/BackHeader";
+import { AppIcon } from "@/app/components/common/AppIcon";
+import Button from "@/app/components/common/Button";
+import FormField from "@/app/components/form/FormField";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { colors } from "@/app/theme/colors";
+import { validateForgotPassword } from "@/app/utils/validation";
 import { useRouter } from "expo-router";
 import { PencilSimpleLine } from "phosphor-react-native";
-import BackHeader from "@/app/components/auth/BackHeader";
-import FormField from "@/app/components/form/FormField";
-import Button from "@/app/components/common/Button";
-import { AppIcon } from "@/app/components/common/AppIcon";
-import { useAuth } from "@/app/contexts/AuthContext";
-import { validateForgotPassword } from "@/app/utils/validation";
-import { colors } from "@/app/theme/colors";
+import React, { useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CIRCLE_ICON_SIZE = 80;
 

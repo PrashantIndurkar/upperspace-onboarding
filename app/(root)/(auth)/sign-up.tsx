@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   Pressable,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { PencilSimpleLine } from "phosphor-react-native";
 import BackHeader from "@/app/components/auth/BackHeader";

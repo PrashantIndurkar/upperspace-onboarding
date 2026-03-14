@@ -8,17 +8,17 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
 import { validateLogin } from "@/app/utils/validation";
 import { useRouter } from "expo-router";
-import { SignIn as SignInIcon } from "phosphor-react-native";
+import { SignInIcon } from "phosphor-react-native";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CIRCLE_ICON_SIZE = 80;
 
