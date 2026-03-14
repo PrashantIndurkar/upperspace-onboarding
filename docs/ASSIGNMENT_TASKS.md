@@ -8,7 +8,7 @@ All requirements from the assignment brief, in Todoist-style checklist form.
 | Status    | Meaning                          |
 | --------- | -------------------------------- |
 | ✅ Done    | Implemented and verified         |
-| ⬜ Pending | Not done yet (deliverables only) |
+| ✅ Done | Videos, Github repo, ScreenShots, Notion docs |
 
 
 ---
@@ -88,7 +88,7 @@ All requirements from the assignment brief, in Todoist-style checklist form.
 - ✅ **Done** – **GitHub repository** – project code pushed to a GitHub repo and link shared.
 - ✅ **Done** – **README.md** – setup instructions and explanation of implemented features (see [README.md](./README.md)).
 - ✅ **Done** – **Assignment task list** – this file (ASSIGNMENT_TASKS.md) with all tasks listed and completed where done.
-- ⬜ **Pending** – **Screenshots or short video** – demonstrating Login, Signup, Home, logout, and (optional) persistence; add to repo and link in README.
+- ✅ **Dne** – **Screenshots or short video** – demonstrating Login, Signup, Home, logout, and (optional) persistence; add to repo and link in README.
 
 ---
 
