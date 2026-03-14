@@ -1,13 +1,18 @@
+import { colors } from "@/app/theme/colors";
+import { Eye, EyeSlash } from "phosphor-react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { Eye, EyeSlash } from "phosphor-react-native";
 import FormField, { type FormFieldProps } from "./FormField";
-import { colors } from "@/app/theme/colors";
 
 const ICON_SIZE = 22;
 
-export interface PasswordFieldProps
-  extends Omit<FormFieldProps, "secureTextEntry" | "rightElement" | "keyboardType"> {}
+export interface PasswordFieldProps extends Omit<
+  FormFieldProps,
+  "secureTextEntry" | "rightElement" | "keyboardType"
+> {
+  placeholder?: string;
+  error?: string;
+}
 
 export default function PasswordField(props: PasswordFieldProps) {
   const [visible, setVisible] = useState(false);
@@ -29,7 +34,11 @@ export default function PasswordField(props: PasswordFieldProps) {
           accessibilityRole="button"
         >
           {visible ? (
-            <EyeSlash size={ICON_SIZE} color={colors.iconMuted} weight="regular" />
+            <EyeSlash
+              size={ICON_SIZE}
+              color={colors.iconMuted}
+              weight="regular"
+            />
           ) : (
             <Eye size={ICON_SIZE} color={colors.iconMuted} weight="regular" />
           )}

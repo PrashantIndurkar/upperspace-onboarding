@@ -1,6 +1,6 @@
-import React, { type ReactNode } from "react";
-import { View, Text, TextInput, Platform } from "react-native";
 import { colors } from "@/app/theme/colors";
+import React, { type ReactNode } from "react";
+import { Platform, Text, TextInput, View } from "react-native";
 
 /** Fixed height for single-line inputs: prevents growth when typing and keeps text vertically centered. */
 const INPUT_HEIGHT = 48;
@@ -46,7 +46,11 @@ export default function FormField({
             hasError ? "border-red-500" : "border-neutral-300"
           } ${rightElement != null ? "pr-12" : ""} ${!editable ? "opacity-70" : ""}`}
           style={[
-            { height: INPUT_HEIGHT, paddingVertical: 0, textAlignVertical: "center" },
+            {
+              height: INPUT_HEIGHT,
+              paddingVertical: 0,
+              textAlignVertical: "center",
+            },
             Platform.OS === "android" && { includeFontPadding: false },
           ]}
           value={value}
