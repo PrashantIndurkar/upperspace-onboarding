@@ -21,11 +21,6 @@ import { colors } from "@/app/theme/colors";
 
 const CIRCLE_ICON_SIZE = 80;
 
-const EMAIL_ERROR_MESSAGES = [
-  "Email is required.",
-  "Please enter a valid email address.",
-];
-
 export default function ForgotPasswordScreen() {
   const router = useRouter();
   const { sendPasswordResetCode } = useAuth();
@@ -35,17 +30,16 @@ export default function ForgotPasswordScreen() {
   const [contextError, setContextError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const setFieldErrors = (errors: string[]) => {
-    setEmailError(errors.find((e) => EMAIL_ERROR_MESSAGES.includes(e)) ?? "");
-    const mapped = new Set(EMAIL_ERROR_MESSAGES);
-    setContextError(errors.find((e) => !mapped.has(e)) ?? "");
-  };
-
   const handleSendCode = async () => {
+    // Clear previous errors
+    setEmailError("");
     setContextError("");
+
+    // Validate email - since validateForgotPassword only checks email,
+    // any validation error is an email error
     const result = validateForgotPassword(email);
     if (!result.ok) {
-      setFieldErrors(result.errors);
+      setEmailError(result.errors[0] || "");
       return;
     }
     setLoading(true);

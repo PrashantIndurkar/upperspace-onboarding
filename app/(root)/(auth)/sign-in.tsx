@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { SignIn as SignInIcon } from "phosphor-react-native";
 import BackHeader from "@/app/components/auth/BackHeader";
+import SocialButton from "@/app/components/auth/SocialButton";
+import { AppIcon } from "@/app/components/common/AppIcon";
+import Button from "@/app/components/common/Button";
 import FormField from "@/app/components/form/FormField";
 import PasswordField from "@/app/components/form/PasswordField";
-import SocialButton from "@/app/components/auth/SocialButton";
-import Button from "@/app/components/common/Button";
-import { AppIcon } from "@/app/components/common/AppIcon";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { validateLogin } from "@/app/utils/validation";
 import { colors } from "@/app/theme/colors";
+import { validateLogin } from "@/app/utils/validation";
+import { useRouter } from "expo-router";
+import { SignIn as SignInIcon } from "phosphor-react-native";
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
 const CIRCLE_ICON_SIZE = 80;
 
@@ -34,23 +34,28 @@ export default function SignInScreen() {
   const [contextError, setContextError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const setFieldErrors = (errors: string[]) => {
-    const emailMessages = [
-      "Email is required.",
-      "Please enter a valid email address.",
-    ];
-    const passwordMessages = ["Password is required."];
-    setEmailError(errors.find((e) => emailMessages.includes(e)) ?? "");
-    setPasswordError(errors.find((e) => passwordMessages.includes(e)) ?? "");
-    const mapped = new Set([...emailMessages, ...passwordMessages]);
-    setContextError(errors.find((e) => !mapped.has(e)) ?? "");
-  };
-
   const handleSignIn = async () => {
+    // Clear previous errors
+    setEmailError("");
+    setPasswordError("");
     setContextError("");
+
+    // Validate form - map errors to their respective fields
     const result = validateLogin(email, password);
     if (!result.ok) {
-      setFieldErrors(result.errors);
+      // Simple mapping: errors mentioning "email" go to emailError,
+      // errors mentioning "password" go to passwordError
+      result.errors.forEach((error) => {
+        const lowerError = error.toLowerCase();
+        if (lowerError.includes("email")) {
+          setEmailError(error);
+        } else if (lowerError.includes("password")) {
+          setPasswordError(error);
+        } else {
+          // Any unexpected validation errors go to context
+          setContextError(error);
+        }
+      });
       return;
     }
     setLoading(true);

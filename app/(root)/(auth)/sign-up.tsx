@@ -35,32 +35,30 @@ export default function SignUpScreen() {
   const [contextError, setContextError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const setFieldErrors = (errors: string[]) => {
-    const nameMessages = ["Full name is required."];
-    const emailMessages = [
-      "Email is required.",
-      "Please enter a valid email address.",
-    ];
-    const passwordMessages = [
-      "Password is required.",
-      "Password must be at least 6 characters.",
-    ];
-    setNameError(errors.find((e) => nameMessages.includes(e)) ?? "");
-    setEmailError(errors.find((e) => emailMessages.includes(e)) ?? "");
-    setPasswordError(errors.find((e) => passwordMessages.includes(e)) ?? "");
-    const mapped = new Set([
-      ...nameMessages,
-      ...emailMessages,
-      ...passwordMessages,
-    ]);
-    setContextError(errors.find((e) => !mapped.has(e)) ?? "");
-  };
-
   const handleRegister = async () => {
+    // Clear previous errors
+    setNameError("");
+    setEmailError("");
+    setPasswordError("");
     setContextError("");
+
+    // Validate form - map errors to their respective fields
     const result = validateSignUp(name, email, password);
     if (!result.ok) {
-      setFieldErrors(result.errors);
+      // Simple mapping: errors mentioning field names go to respective field errors
+      result.errors.forEach((error) => {
+        const lowerError = error.toLowerCase();
+        if (lowerError.includes("name")) {
+          setNameError(error);
+        } else if (lowerError.includes("email")) {
+          setEmailError(error);
+        } else if (lowerError.includes("password")) {
+          setPasswordError(error);
+        } else {
+          // Any unexpected validation errors go to context
+          setContextError(error);
+        }
+      });
       return;
     }
     setLoading(true);
