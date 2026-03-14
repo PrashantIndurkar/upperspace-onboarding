@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { CaretLeft, CaretRight } from "phosphor-react-native";
+import { CaretLeftIcon, CaretRightIcon } from "phosphor-react-native";
 import { colors } from "@/app/theme/colors";
 
 const HIT_SLOP = { top: 0, bottom: 12, left: 12, right: 12 };
@@ -45,7 +45,7 @@ const SkipButton = ({ variant = "light" }: SkipButtonProps) => {
           accessibilityLabel="Go back"
           accessibilityRole="button"
         >
-          <CaretLeft size={ICON_SIZE} color={iconColor} weight="bold" />
+          <CaretLeftIcon size={ICON_SIZE} color={iconColor} weight="bold" />
         </TouchableOpacity>
       ) : (
         <View className="w-12" />
@@ -64,7 +64,7 @@ const SkipButton = ({ variant = "light" }: SkipButtonProps) => {
         >
           Skip
         </Text>
-        <CaretRight size={ICON_SIZE} color={iconColor} weight="bold" />
+        <CaretRightIcon size={ICON_SIZE} color={iconColor} weight="bold" />
       </TouchableOpacity>
     </View>
   );

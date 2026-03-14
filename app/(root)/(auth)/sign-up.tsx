@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { PencilSimpleLine } from "phosphor-react-native";
 import BackHeader from "@/app/components/auth/BackHeader";
+import SocialButton from "@/app/components/auth/SocialButton";
+import { AppIcon } from "@/app/components/common/AppIcon";
+import Button from "@/app/components/common/Button";
 import FormField from "@/app/components/form/FormField";
 import PasswordField from "@/app/components/form/PasswordField";
-import SocialButton from "@/app/components/auth/SocialButton";
-import Button from "@/app/components/common/Button";
-import { AppIcon } from "@/app/components/common/AppIcon";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { validateSignUp } from "@/app/utils/validation";
 import { colors } from "@/app/theme/colors";
+import { validateSignUp } from "@/app/utils/validation";
+import { useRouter } from "expo-router";
+import { PencilSimpleLineIcon } from "phosphor-react-native";
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CIRCLE_ICON_SIZE = 80;
 
@@ -167,7 +167,11 @@ export default function SignUpScreen() {
             className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"
             textClassName="text-neutral-900 font-semibold text-lg"
             IconLeft={() => (
-              <PencilSimpleLine size={22} color={colors.icon} weight="bold" />
+              <PencilSimpleLineIcon
+                size={22}
+                color={colors.icon}
+                weight="bold"
+              />
             )}
           />
 

@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  Pressable,
-  ScrollView,
-  Platform,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { MagnifyingGlass, User } from "phosphor-react-native";
-import { useAuth } from "@/app/contexts/AuthContext";
 import { collageImages } from "@/app/assetSources";
 import { LogoutConfirmModal } from "@/app/components/common/LogoutConfirmModal";
-import { UserMenuModal } from "@/app/components/home/UserMenuModal";
 import { DestinationCard } from "@/app/components/home/DestinationCard";
+import { UserMenuModal } from "@/app/components/home/UserMenuModal";
+import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
+import { useRouter } from "expo-router";
+import { MagnifyingGlassIcon, UserIcon } from "phosphor-react-native";
+import React, { useState } from "react";
+import {
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const SEARCH_INPUT_HEIGHT = 48;
 
@@ -116,7 +116,7 @@ export default function HomeScreen() {
               accessibilityLabel="Open user menu"
               accessibilityRole="button"
             >
-              <User size={22} color={colors.icon} weight="regular" />
+              <UserIcon size={22} color={colors.icon} weight="regular" />
             </Pressable>
           </View>
 
@@ -136,7 +136,7 @@ export default function HomeScreen() {
           <View className="px-5 mb-4">
             <View className="flex-row items-center rounded-full border border-neutral-300 bg-white pr-2 min-h-12">
               <View className="pl-4 pr-2 justify-center" pointerEvents="none">
-                <MagnifyingGlass
+                <MagnifyingGlassIcon
                   size={20}
                   color={colors.iconMuted}
                   weight="regular"

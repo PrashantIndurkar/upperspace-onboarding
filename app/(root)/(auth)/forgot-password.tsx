@@ -6,7 +6,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
 import { validateForgotPassword } from "@/app/utils/validation";
 import { useRouter } from "expo-router";
-import { PencilSimpleLine } from "phosphor-react-native";
+import { PencilSimpleLineIcon } from "phosphor-react-native";
 import React, { useState } from "react";
 import {
   Alert,
@@ -133,7 +133,11 @@ export default function ForgotPasswordScreen() {
             className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"
             textClassName="text-neutral-900 font-semibold text-lg"
             IconLeft={() => (
-              <PencilSimpleLine size={22} color={colors.icon} weight="bold" />
+              <PencilSimpleLineIcon
+                size={22}
+                color={colors.icon}
+                weight="bold"
+              />
             )}
           />
 

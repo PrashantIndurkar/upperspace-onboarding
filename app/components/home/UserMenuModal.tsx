@@ -1,10 +1,10 @@
 import React from "react";
 import { Modal, View, Text, Pressable } from "react-native";
 import {
-  User,
-  UsersThree,
-  Gear,
-  SignOut,
+  UserIcon,
+  UsersThreeIcon,
+  GearIcon,
+  SignOutIcon,
 } from "phosphor-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors } from "@/app/theme/colors";
@@ -52,7 +52,7 @@ export function UserMenuModal({
             accessibilityRole="menuitem"
             accessibilityLabel="Profile"
           >
-            <User
+            <UserIcon
               size={MENU_ICON_SIZE}
               color={colors.iconMuted}
               weight="regular"
@@ -64,7 +64,7 @@ export function UserMenuModal({
             accessibilityRole="menuitem"
             accessibilityLabel="Community subscription"
           >
-            <UsersThree
+            <UsersThreeIcon
               size={MENU_ICON_SIZE}
               color={colors.iconMuted}
               weight="regular"
@@ -78,7 +78,7 @@ export function UserMenuModal({
             accessibilityRole="menuitem"
             accessibilityLabel="Settings"
           >
-            <Gear
+            <GearIcon
               size={MENU_ICON_SIZE}
               color={colors.iconMuted}
               weight="regular"
@@ -91,7 +91,7 @@ export function UserMenuModal({
             accessibilityRole="menuitem"
             accessibilityLabel="Sign out"
           >
-            <SignOut
+            <SignOutIcon
               size={MENU_ICON_SIZE}
               color={colors.iconMuted}
               weight="regular"
