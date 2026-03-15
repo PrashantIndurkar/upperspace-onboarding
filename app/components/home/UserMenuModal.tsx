@@ -1,13 +1,13 @@
-import React from "react";
-import { Modal, View, Text, Pressable } from "react-native";
+import { colors } from "@/app/theme/colors";
 import {
-  UserIcon,
-  UsersThreeIcon,
   GearIcon,
   SignOutIcon,
+  UserIcon,
+  UsersThreeIcon,
 } from "phosphor-react-native";
+import React from "react";
+import { Modal, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { colors } from "@/app/theme/colors";
 
 const MENU_ICON_SIZE = 20;
 
@@ -34,7 +34,7 @@ export function UserMenuModal({
       <Pressable
         className="flex-1 items-end"
         style={{
-          paddingTop: insets.top + 8,
+          paddingTop: insets.top + 60,
           paddingRight: 20,
         }}
         onPress={onClose}
