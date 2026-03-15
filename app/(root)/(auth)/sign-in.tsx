@@ -6,10 +6,12 @@ import FormField from "@/app/components/form/FormField";
 import PasswordField from "@/app/components/form/PasswordField";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
-import { validateLogin, hasErrors } from "@/app/utils/validation";
+import { loginSchema, type LoginFormData } from "@/app/utils/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { SignInIcon } from "phosphor-react-native";
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -26,35 +28,29 @@ export default function SignInScreen() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [errors, setErrors] = useState<{
-    email?: string;
-    password?: string;
-    general?: string;
-  }>({});
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSignIn = async () => {
-    // Clear previous errors
-    setErrors({});
+  const { control, handleSubmit } = useForm<LoginFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(loginSchema),
+    mode: "onSubmit",
+  });
 
-    // Validate form
-    const validationErrors = validateLogin(email, password);
-    if (hasErrors(validationErrors)) {
-      setErrors(validationErrors);
-      return;
-    }
-
+  const onValid = async (data: LoginFormData) => {
+    setError(null);
     setLoading(true);
     try {
-      await login(email, password);
+      await login(data.email, data.password);
       router.replace("/(root)/home");
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Incorrect credentials.";
-      setErrors({ general: message });
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -102,28 +98,38 @@ export default function SignInScreen() {
             Sign in to access smart, personalized travel plans made for you.
           </Text>
 
-          <FormField
-            label="Email address"
-            value={email}
-            onChangeText={(text: string) => {
-              setEmail(text);
-              if (errors.email)
-                setErrors((prev) => ({ ...prev, email: undefined }));
-            }}
-            placeholder="example@gmail.com"
-            error={errors.email}
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <FormField
+                label="Email address"
+                value={field.value}
+                onChangeText={(text: string) => {
+                  field.onChange(text);
+                  if (error) setError(null);
+                }}
+                placeholder="example@gmail.com"
+                error={fieldState.error?.message}
+                keyboardType="email-address"
+              />
+            )}
           />
-          <PasswordField
-            label="Password"
-            value={password}
-            onChangeText={(text: string) => {
-              setPassword(text);
-              if (errors.password)
-                setErrors((prev) => ({ ...prev, password: undefined }));
-            }}
-            placeholder="@Sn123hsn#"
-            error={errors.password}
+          <Controller
+            control={control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <PasswordField
+                label="Password"
+                value={field.value}
+                onChangeText={(text: string) => {
+                  field.onChange(text);
+                  if (error) setError(null);
+                }}
+                placeholder="@Sn123hsn#"
+                error={fieldState.error?.message}
+              />
+            )}
           />
 
           <View className="flex-row justify-between items-center mb-4">
@@ -164,18 +170,18 @@ export default function SignInScreen() {
             </Pressable>
           </View>
 
-          {errors.general ? (
+          {error ? (
             <Text
               className="text-red-500 text-sm mb-3"
               role="alert"
               accessibilityLiveRegion="polite"
             >
-              {errors.general}
+              {error}
             </Text>
           ) : null}
 
           <Button
-            onPress={handleSignIn}
+            onPress={handleSubmit(onValid)}
             title="Sign in"
             loading={loading}
             className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"

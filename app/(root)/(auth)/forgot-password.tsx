@@ -4,10 +4,15 @@ import Button from "@/app/components/common/Button";
 import FormField from "@/app/components/form/FormField";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
-import { validateForgotPassword, hasErrors } from "@/app/utils/validation";
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordFormData,
+} from "@/app/utils/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { PencilSimpleLineIcon } from "phosphor-react-native";
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -17,7 +22,6 @@ import {
   Text,
   View,
 } from "react-native";
-
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const CIRCLE_ICON_SIZE = 80;
@@ -26,27 +30,22 @@ export default function ForgotPasswordScreen() {
   const router = useRouter();
   const { sendPasswordResetCode } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState<{
-    email?: string;
-    general?: string;
-  }>({});
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSendCode = async () => {
-    // Clear previous errors
-    setErrors({});
+  const { control, handleSubmit } = useForm<ForgotPasswordFormData>({
+    defaultValues: {
+      email: "",
+    },
+    resolver: zodResolver(forgotPasswordSchema),
+    mode: "onSubmit",
+  });
 
-    // Validate email
-    const validationErrors = validateForgotPassword(email);
-    if (hasErrors(validationErrors)) {
-      setErrors(validationErrors);
-      return;
-    }
-
+  const onValid = async (data: ForgotPasswordFormData) => {
+    setError(null);
     setLoading(true);
     try {
-      await sendPasswordResetCode(email);
+      await sendPasswordResetCode(data.email);
       Alert.alert(
         "Code sent",
         "If an account exists, a code has been sent to your email.",
@@ -57,19 +56,19 @@ export default function ForgotPasswordScreen() {
           },
         ],
       );
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Something went wrong.";
-      setErrors({ general: message });
+    } catch {
+      setError("Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
 
+  // return to sign-in
   const handleSignInPress = () => {
     router.replace("/(root)/(auth)/sign-in");
   };
 
+  // back button logic
   const handleBack = () => {
     router.replace("/(root)/(auth)/sign-in");
   };
@@ -87,8 +86,7 @@ export default function ForgotPasswordScreen() {
           showsVerticalScrollIndicator={false}
         >
           <BackHeader onBack={handleBack} />
-
-          {/* App icon above title */}
+          {/* logo */}
           <AppIcon size={CIRCLE_ICON_SIZE} className="self-center my-6" />
 
           <Text
@@ -105,31 +103,39 @@ export default function ForgotPasswordScreen() {
             instantly.
           </Text>
 
-          <FormField
-            label="Email address*"
-            value={email}
-            onChangeText={(text: string) => {
-              setEmail(text);
-              if (errors.email)
-                setErrors((prev) => ({ ...prev, email: undefined }));
-            }}
-            placeholder="example@gmail.com"
-            error={errors.email}
-            keyboardType="email-address"
+          {/* email input */}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <FormField
+                label="Email address*"
+                value={field.value}
+                onChangeText={(text: string) => {
+                  field.onChange(text);
+                  if (error) setError(null);
+                }}
+                placeholder="example@gmail.com"
+                error={fieldState.error?.message}
+                keyboardType="email-address"
+              />
+            )}
           />
 
-          {errors.general ? (
+          {/* general error */}
+          {error ? (
             <Text
               className="text-red-500 text-sm mb-3"
               role="alert"
               accessibilityLiveRegion="polite"
             >
-              {errors.general}
+              {error}
             </Text>
           ) : null}
 
+          {/* submit button */}
           <Button
-            onPress={handleSendCode}
+            onPress={handleSubmit(onValid)}
             title="Send Code"
             loading={loading}
             className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"
@@ -143,6 +149,7 @@ export default function ForgotPasswordScreen() {
             )}
           />
 
+          {/* sign in link */}
           <View className="flex-row flex-wrap justify-center items-center gap-1 pb-8">
             <Text className="text-neutral-600 text-base">
               Already have an account?

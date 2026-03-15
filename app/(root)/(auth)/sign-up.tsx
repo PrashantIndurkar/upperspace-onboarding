@@ -6,10 +6,12 @@ import FormField from "@/app/components/form/FormField";
 import PasswordField from "@/app/components/form/PasswordField";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
-import { validateSignUp, hasErrors } from "@/app/utils/validation";
+import { signUpSchema, type SignUpFormData } from "@/app/utils/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { PencilSimpleLineIcon } from "phosphor-react-native";
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -26,38 +28,35 @@ export default function SignUpScreen() {
   const router = useRouter();
   const { signUp } = useAuth();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{
-    name?: string;
-    email?: string;
-    password?: string;
-    general?: string;
-  }>({});
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async () => {
-    // Clear previous errors
-    setErrors({});
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(signUpSchema),
+    mode: "onSubmit",
+  });
 
-    // Validate form
-    const validationErrors = validateSignUp(name, email, password);
-    if (hasErrors(validationErrors)) {
-      setErrors(validationErrors);
-      return;
-    }
-
+  const onValid = async (data: SignUpFormData) => {
+    setError(null);
     setLoading(true);
     try {
-      await signUp(name, email, password);
+      await signUp(data.name, data.email, data.password);
       router.replace("/(root)/(auth)/sign-in");
     } catch (err) {
       const message =
         err instanceof Error
           ? err.message
           : "This email is already registered.";
-      setErrors({ general: message });
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -104,54 +103,69 @@ export default function SignUpScreen() {
             adventures.
           </Text>
 
-          <FormField
-            label="Full Name"
-            value={name}
-            onChangeText={(text: string) => {
-              setName(text);
-              if (errors.name)
-                setErrors((prev) => ({ ...prev, name: undefined }));
-            }}
-            placeholder="Alex Smith"
-            error={errors.name}
-            autoCapitalize="words"
+          <Controller
+            control={control}
+            name="name"
+            render={({ field, fieldState }) => (
+              <FormField
+                label="Full Name"
+                value={field.value}
+                onChangeText={(text: string) => {
+                  field.onChange(text);
+                  if (error) setError(null);
+                }}
+                placeholder="Alex Smith"
+                error={fieldState.error?.message}
+                autoCapitalize="words"
+              />
+            )}
           />
-          <FormField
-            label="Email"
-            value={email}
-            onChangeText={(text: string) => {
-              setEmail(text);
-              if (errors.email)
-                setErrors((prev) => ({ ...prev, email: undefined }));
-            }}
-            placeholder="example@gmail.com"
-            error={errors.email}
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <FormField
+                label="Email"
+                value={field.value}
+                onChangeText={(text: string) => {
+                  field.onChange(text);
+                  if (error) setError(null);
+                }}
+                placeholder="example@gmail.com"
+                error={fieldState.error?.message}
+                keyboardType="email-address"
+              />
+            )}
           />
-          <PasswordField
-            label="Password"
-            value={password}
-            onChangeText={(text: string) => {
-              setPassword(text);
-              if (errors.password)
-                setErrors((prev) => ({ ...prev, password: undefined }));
-            }}
-            placeholder="@Sn123hsn#"
-            error={errors.password}
+          <Controller
+            control={control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <PasswordField
+                label="Password"
+                value={field.value}
+                onChangeText={(text: string) => {
+                  field.onChange(text);
+                  if (error) setError(null);
+                }}
+                placeholder="@Sn123hsn#"
+                error={fieldState.error?.message}
+              />
+            )}
           />
 
-          {errors.general ? (
+          {error ? (
             <Text
               className="text-red-500 text-sm mb-3"
               role="alert"
               accessibilityLiveRegion="polite"
             >
-              {errors.general}
+              {error}
             </Text>
           ) : null}
 
           <Button
-            onPress={handleRegister}
+            onPress={handleSubmit(onValid)}
             title="Register"
             loading={loading}
             className="w-full py-4 rounded-full bg-primary shadow-none mt-2 mb-4"

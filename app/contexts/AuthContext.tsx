@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { userSchema, type User } from "@/app/utils/schemas";
 import React, {
   createContext,
   useCallback,
@@ -8,22 +9,8 @@ import React, {
   type ReactNode,
 } from "react";
 
-// User type for the authenticated user state
-export type User = { name: string; email: string };
-
 // Key used for storing user info in AsyncStorage
 const AUTH_USER_KEY = "AUTH_USER_KEY";
-
-// Utility function to validate if a value matches the User shape
-function isValidUser(value: unknown): value is User {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value) &&
-    typeof (value as Record<string, unknown>).name === "string" &&
-    typeof (value as Record<string, unknown>).email === "string"
-  );
-}
 
 // Defines the values and methods exposed in the Auth Context
 type AuthContextValue = {
@@ -80,9 +67,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        // Validate user shape and restore if valid
-        if (isValidUser(parsed)) {
-          setUser(parsed);
+        // Validate user shape using Zod schema and restore if valid
+        const result = userSchema.safeParse(parsed);
+        if (result.success) {
+          setUser(result.data);
         } else {
           // Invalid user structure - remove corrupted data
           console.warn("Invalid user data structure, clearing storage");
@@ -111,17 +99,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const normalizedEmail = email.trim().toLowerCase();
       const trimmedName = name.trim();
 
-      // Validate inputs
-      if (!trimmedName) {
-        throw new Error("Name is required.");
-      }
-      if (!normalizedEmail) {
-        throw new Error("Email is required.");
-      }
-      if (!password) {
-        throw new Error("Password is required.");
-      }
-
       // Prevent duplicate registration
       if (userCredentialsMap.has(normalizedEmail)) {
         throw new Error("This email is already registered.");
@@ -129,7 +106,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Create and store new user
       const newUser: User = { name: trimmedName, email: normalizedEmail };
-      userCredentialsMap.set(normalizedEmail, { user: newUser, password });
+      userCredentialsMap.set(normalizedEmail, {
+        user: newUser,
+        password,
+      });
     },
     [],
   );
@@ -137,14 +117,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Attempts to authenticate a user by email & password
   const login = useCallback(async (email: string, password: string) => {
     const normalizedEmail = email.trim().toLowerCase();
-
-    // Validate inputs
-    if (!normalizedEmail) {
-      throw new Error("Email is required.");
-    }
-    if (!password) {
-      throw new Error("Password is required.");
-    }
 
     // Look up user credentials
     const entry = userCredentialsMap.get(normalizedEmail);
