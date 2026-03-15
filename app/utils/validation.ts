@@ -25,7 +25,10 @@ export type ForgotPasswordErrors = {
  * Helper: Check if errors object has any validation errors.
  * Returns true if there are errors, false if valid.
  */
-export function hasErrors(errors: Record<string, string | undefined>): boolean {
+export type ErrorValue = string | undefined;
+export type ErrorsObject = Record<string, ErrorValue>;
+
+export function hasErrors(errors: ErrorsObject): boolean {
   return Object.keys(errors).length > 0;
 }
 
