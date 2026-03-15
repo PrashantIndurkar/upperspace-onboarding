@@ -6,7 +6,7 @@ import FormField from "@/app/components/form/FormField";
 import PasswordField from "@/app/components/form/PasswordField";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
-import { validateLogin } from "@/app/utils/validation";
+import { validateLogin, hasErrors } from "@/app/utils/validation";
 import { useRouter } from "expo-router";
 import { SignInIcon } from "phosphor-react-native";
 import React, { useState } from "react";
@@ -29,35 +29,24 @@ export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [contextError, setContextError] = useState("");
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    general?: string;
+  }>({});
   const [loading, setLoading] = useState(false);
 
   const handleSignIn = async () => {
     // Clear previous errors
-    setEmailError("");
-    setPasswordError("");
-    setContextError("");
+    setErrors({});
 
-    // Validate form - map errors to their respective fields
-    const result = validateLogin(email, password);
-    if (!result.ok) {
-      // Simple mapping: errors mentioning "email" go to emailError,
-      // errors mentioning "password" go to passwordError
-      result.errors.forEach((error) => {
-        const lowerError = error.toLowerCase();
-        if (lowerError.includes("email")) {
-          setEmailError(error);
-        } else if (lowerError.includes("password")) {
-          setPasswordError(error);
-        } else {
-          // Any unexpected validation errors go to context
-          setContextError(error);
-        }
-      });
+    // Validate form
+    const validationErrors = validateLogin(email, password);
+    if (hasErrors(validationErrors)) {
+      setErrors(validationErrors);
       return;
     }
+
     setLoading(true);
     try {
       await login(email, password);
@@ -65,7 +54,7 @@ export default function SignInScreen() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Incorrect credentials.";
-      setContextError(message);
+      setErrors({ general: message });
     } finally {
       setLoading(false);
     }
@@ -118,10 +107,11 @@ export default function SignInScreen() {
             value={email}
             onChangeText={(text: string) => {
               setEmail(text);
-              if (emailError) setEmailError("");
+              if (errors.email)
+                setErrors((prev) => ({ ...prev, email: undefined }));
             }}
             placeholder="example@gmail.com"
-            error={emailError}
+            error={errors.email}
             keyboardType="email-address"
           />
           <PasswordField
@@ -129,10 +119,11 @@ export default function SignInScreen() {
             value={password}
             onChangeText={(text: string) => {
               setPassword(text);
-              if (passwordError) setPasswordError("");
+              if (errors.password)
+                setErrors((prev) => ({ ...prev, password: undefined }));
             }}
             placeholder="@Sn123hsn#"
-            error={passwordError}
+            error={errors.password}
           />
 
           <View className="flex-row justify-between items-center mb-4">
@@ -173,13 +164,13 @@ export default function SignInScreen() {
             </Pressable>
           </View>
 
-          {contextError ? (
+          {errors.general ? (
             <Text
               className="text-red-500 text-sm mb-3"
               role="alert"
               accessibilityLiveRegion="polite"
             >
-              {contextError}
+              {errors.general}
             </Text>
           ) : null}
 

@@ -1,6 +1,6 @@
 import { Redirect } from "expo-router";
-import { useAuth } from "./contexts/AuthContext";
 import { LoadingScreen } from "./components/common/LoadingScreen";
+import { useAuth } from "./contexts/AuthContext";
 
 export default function IndexScreen() {
   const { user, isHydrating } = useAuth();

@@ -5,78 +5,88 @@ function isValidEmail(email: string): boolean {
   return /.+@.+\.[a-zA-Z]{2,}$/.test(email.trim());
 }
 
-export type SignUpValidationResult =
-  | { ok: true }
-  | { ok: false; errors: string[] };
+// Simple error types - just plain objects with optional string fields
+export type SignUpErrors = {
+  name?: string;
+  email?: string;
+  password?: string;
+};
+
+export type LoginErrors = {
+  email?: string;
+  password?: string;
+};
+
+export type ForgotPasswordErrors = {
+  email?: string;
+};
 
 /**
- * Validates sign-up form. Returns all applicable errors.
+ * Helper: Check if errors object has any validation errors.
+ * Returns true if there are errors, false if valid.
+ */
+export function hasErrors(errors: Record<string, string | undefined>): boolean {
+  return Object.keys(errors).length > 0;
+}
+
+/**
+ * Validates sign-up form. Returns errors object - empty means valid, has keys means invalid.
  */
 export function validateSignUp(
   name: string,
   email: string,
-  password: string
-): SignUpValidationResult {
-  const errors: string[] = [];
+  password: string,
+): SignUpErrors {
+  const errors: SignUpErrors = {};
 
   if (!name?.trim()) {
-    errors.push("Full name is required.");
+    errors.name = "Full name is required.";
   }
   if (!email?.trim()) {
-    errors.push("Email is required.");
+    errors.email = "Email is required.";
   } else if (!isValidEmail(email)) {
-    errors.push("Please enter a valid email address.");
+    errors.email = "Please enter a valid email address.";
   }
   if (!password) {
-    errors.push("Password is required.");
+    errors.password = "Password is required.";
   } else if (password.length < 6) {
-    errors.push("Password must be at least 6 characters.");
+    errors.password = "Password must be at least 6 characters.";
   }
 
-  if (errors.length > 0) {
-    return { ok: false, errors };
-  }
-  return { ok: true };
+  return errors;
 }
 
 /**
  * Validates login form. Email required + valid format; password required only (no min length).
+ * Returns errors object - empty means valid, has keys means invalid.
  */
-export function validateLogin(
-  email: string,
-  password: string
-): SignUpValidationResult {
-  const errors: string[] = [];
+export function validateLogin(email: string, password: string): LoginErrors {
+  const errors: LoginErrors = {};
 
   if (!email?.trim()) {
-    errors.push("Email is required.");
+    errors.email = "Email is required.";
   } else if (!isValidEmail(email)) {
-    errors.push("Please enter a valid email address.");
+    errors.email = "Please enter a valid email address.";
   }
   if (!password) {
-    errors.push("Password is required.");
+    errors.password = "Password is required.";
   }
 
-  if (errors.length > 0) {
-    return { ok: false, errors };
-  }
-  return { ok: true };
+  return errors;
 }
 
 /**
  * Validates forgot-password form. Email required + valid format only.
+ * Returns errors object - empty means valid, has keys means invalid.
  */
-export function validateForgotPassword(email: string): SignUpValidationResult {
-  const errors: string[] = [];
+export function validateForgotPassword(email: string): ForgotPasswordErrors {
+  const errors: ForgotPasswordErrors = {};
 
   if (!email?.trim()) {
-    errors.push("Email is required.");
+    errors.email = "Email is required.";
   } else if (!isValidEmail(email)) {
-    errors.push("Please enter a valid email address.");
+    errors.email = "Please enter a valid email address.";
   }
 
-  if (errors.length > 0) {
-    return { ok: false, errors };
-  }
-  return { ok: true };
+  return errors;
 }

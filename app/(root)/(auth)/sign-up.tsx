@@ -6,7 +6,7 @@ import FormField from "@/app/components/form/FormField";
 import PasswordField from "@/app/components/form/PasswordField";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
-import { validateSignUp } from "@/app/utils/validation";
+import { validateSignUp, hasErrors } from "@/app/utils/validation";
 import { useRouter } from "expo-router";
 import { PencilSimpleLineIcon } from "phosphor-react-native";
 import React, { useState } from "react";
@@ -29,38 +29,25 @@ export default function SignUpScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [contextError, setContextError] = useState("");
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+    general?: string;
+  }>({});
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
     // Clear previous errors
-    setNameError("");
-    setEmailError("");
-    setPasswordError("");
-    setContextError("");
+    setErrors({});
 
-    // Validate form - map errors to their respective fields
-    const result = validateSignUp(name, email, password);
-    if (!result.ok) {
-      // Simple mapping: errors mentioning field names go to respective field errors
-      result.errors.forEach((error) => {
-        const lowerError = error.toLowerCase();
-        if (lowerError.includes("name")) {
-          setNameError(error);
-        } else if (lowerError.includes("email")) {
-          setEmailError(error);
-        } else if (lowerError.includes("password")) {
-          setPasswordError(error);
-        } else {
-          // Any unexpected validation errors go to context
-          setContextError(error);
-        }
-      });
+    // Validate form
+    const validationErrors = validateSignUp(name, email, password);
+    if (hasErrors(validationErrors)) {
+      setErrors(validationErrors);
       return;
     }
+
     setLoading(true);
     try {
       await signUp(name, email, password);
@@ -70,7 +57,7 @@ export default function SignUpScreen() {
         err instanceof Error
           ? err.message
           : "This email is already registered.";
-      setContextError(message);
+      setErrors({ general: message });
     } finally {
       setLoading(false);
     }
@@ -122,10 +109,11 @@ export default function SignUpScreen() {
             value={name}
             onChangeText={(text: string) => {
               setName(text);
-              if (nameError) setNameError("");
+              if (errors.name)
+                setErrors((prev) => ({ ...prev, name: undefined }));
             }}
             placeholder="Alex Smith"
-            error={nameError}
+            error={errors.name}
             autoCapitalize="words"
           />
           <FormField
@@ -133,10 +121,11 @@ export default function SignUpScreen() {
             value={email}
             onChangeText={(text: string) => {
               setEmail(text);
-              if (emailError) setEmailError("");
+              if (errors.email)
+                setErrors((prev) => ({ ...prev, email: undefined }));
             }}
             placeholder="example@gmail.com"
-            error={emailError}
+            error={errors.email}
             keyboardType="email-address"
           />
           <PasswordField
@@ -144,19 +133,20 @@ export default function SignUpScreen() {
             value={password}
             onChangeText={(text: string) => {
               setPassword(text);
-              if (passwordError) setPasswordError("");
+              if (errors.password)
+                setErrors((prev) => ({ ...prev, password: undefined }));
             }}
             placeholder="@Sn123hsn#"
-            error={passwordError}
+            error={errors.password}
           />
 
-          {contextError ? (
+          {errors.general ? (
             <Text
               className="text-red-500 text-sm mb-3"
               role="alert"
               accessibilityLiveRegion="polite"
             >
-              {contextError}
+              {errors.general}
             </Text>
           ) : null}
 

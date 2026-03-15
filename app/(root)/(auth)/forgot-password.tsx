@@ -4,7 +4,7 @@ import Button from "@/app/components/common/Button";
 import FormField from "@/app/components/form/FormField";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { colors } from "@/app/theme/colors";
-import { validateForgotPassword } from "@/app/utils/validation";
+import { validateForgotPassword, hasErrors } from "@/app/utils/validation";
 import { useRouter } from "expo-router";
 import { PencilSimpleLineIcon } from "phosphor-react-native";
 import React, { useState } from "react";
@@ -27,22 +27,23 @@ export default function ForgotPasswordScreen() {
   const { sendPasswordResetCode } = useAuth();
 
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [contextError, setContextError] = useState("");
+  const [errors, setErrors] = useState<{
+    email?: string;
+    general?: string;
+  }>({});
   const [loading, setLoading] = useState(false);
 
   const handleSendCode = async () => {
     // Clear previous errors
-    setEmailError("");
-    setContextError("");
+    setErrors({});
 
-    // Validate email - since validateForgotPassword only checks email,
-    // any validation error is an email error
-    const result = validateForgotPassword(email);
-    if (!result.ok) {
-      setEmailError(result.errors[0] || "");
+    // Validate email
+    const validationErrors = validateForgotPassword(email);
+    if (hasErrors(validationErrors)) {
+      setErrors(validationErrors);
       return;
     }
+
     setLoading(true);
     try {
       await sendPasswordResetCode(email);
@@ -59,7 +60,7 @@ export default function ForgotPasswordScreen() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Something went wrong.";
-      setContextError(message);
+      setErrors({ general: message });
     } finally {
       setLoading(false);
     }
@@ -109,20 +110,21 @@ export default function ForgotPasswordScreen() {
             value={email}
             onChangeText={(text: string) => {
               setEmail(text);
-              if (emailError) setEmailError("");
+              if (errors.email)
+                setErrors((prev) => ({ ...prev, email: undefined }));
             }}
             placeholder="example@gmail.com"
-            error={emailError}
+            error={errors.email}
             keyboardType="email-address"
           />
 
-          {contextError ? (
+          {errors.general ? (
             <Text
               className="text-red-500 text-sm mb-3"
               role="alert"
               accessibilityLiveRegion="polite"
             >
-              {contextError}
+              {errors.general}
             </Text>
           ) : null}
 
