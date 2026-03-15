@@ -1,4 +1,3 @@
-import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -36,12 +35,9 @@ const OnboardingPlanScreen = () => {
       {/* Bottom overlay with blur */}
       <View
         className="absolute bottom-0 left-0 right-0 justify-end overflow-hidden"
-        style={{
-          height: overlayHeight,
-          paddingBottom: insets.bottom + 24,
-        }}
+        style={{ height: overlayHeight, paddingBottom: insets.bottom + 24 }}
       >
-        <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
+        <View className="absolute inset-0 bg-black/50" />
         <View className="flex-1 justify-end px-6 pt-6">
           <Title className="text-white text-3xl font-bold mb-3 text-center">
             Plan your trips with ease and confidence

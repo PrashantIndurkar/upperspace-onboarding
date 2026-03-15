@@ -1,12 +1,12 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 
+import Button from "@/app/components/common/Button";
+import { Subtitle, Title } from "@/app/components/common/Typography";
 import ImageCollage from "@/app/components/onboarding/ImageCollage";
 import SkipButton from "@/app/components/onboarding/SkipButton";
-import { Title, Subtitle } from "@/app/components/common/Typography";
-import Button from "@/app/components/common/Button";
 
 const OnboardingIntroScreen = () => {
   const router = useRouter();

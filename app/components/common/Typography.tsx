@@ -6,14 +6,24 @@ interface TypographyProps {
   className?: string;
 }
 
-export const Title: React.FC<TypographyProps> = ({ children, className = "" }) => (
-  <Text className={`text-4xl font-extrabold text-black mb-4 text-center ${className}`}>
+export const Title: React.FC<TypographyProps> = ({
+  children,
+  className = "",
+}) => (
+  <Text
+    className={`text-4xl font-extrabold text-black mb-4 text-center ${className}`}
+  >
     {children}
   </Text>
 );
 
-export const Subtitle: React.FC<TypographyProps> = ({ children, className = "" }) => (
-  <Text className={`text-lg font-medium text-gray-500 mb-6 leading-6 text-center ${className}`}>
+export const Subtitle: React.FC<TypographyProps> = ({
+  children,
+  className = "",
+}) => (
+  <Text
+    className={`text-lg font-medium text-gray-500 mb-6 leading-6 text-center ${className}`}
+  >
     {children}
   </Text>
 );
